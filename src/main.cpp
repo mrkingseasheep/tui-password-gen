@@ -1,6 +1,3 @@
-// Copyright 2020 Arthur Sonzogni. All rights reserved.
-// Use of this source code is governed by the MIT license that can be found in
-// the LICENSE file.
 #include "ftxui/component/captured_mouse.hpp" // for ftxui
 #include "ftxui/component/component.hpp" // for Checkbox, Renderer, Vertical
 #include "ftxui/component/component_base.hpp"     // for ComponentBase
@@ -19,21 +16,16 @@
 
 int main() {
     using namespace ftxui;
-    std::vector<std::string> options = {"Alphabit", "Capitals", "Numbers",
-                                        "@-_", "Other Symbols"};
-    std::vector<bool> checked(5, false);
+    std::string options[5] = {"Alphabit", "Capitals", "Numbers", "@-_",
+                              "Other Symbols"};
+    bool used[5] = {0, 0, 0, 0, 0};
 
     Component container = Container::Vertical({});
 
-    for (int i = 0; i < 5; ++i) {
-        container->Add(Checkbox(options[i], checked[i]));
-    }
     auto screen = ScreenInteractive::FitComponent();
-    std::string temp = "Hi";
-    bool valid = false;
-    auto checkbox = Checkbox(&temp, &valid);
-    screen.Loop(checkbox);
+    for (int i = 0; i < 5; ++i) {
+        container->Add(Checkbox(&options[i], &used[i]));
+    }
 
-    auto print = [](bool allowed) { std::cout << allowed << std::endl; };
-    std::for_each(checked.cbegin(), checked.cend(), print);
+    screen.Loop(container);
 }
