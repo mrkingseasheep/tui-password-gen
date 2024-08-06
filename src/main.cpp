@@ -1,13 +1,13 @@
-#include "ftxui/component/component.hpp" // for Checkbox, Renderer, Vertical
-#include "ftxui/component/component_base.hpp"     // for ComponentBase
-#include "ftxui/component/screen_interactive.hpp" // for ScreenInteractive
-#include "ftxui/dom/elements.hpp" // for operator|, Element, size, border, frame, vscroll_indicator, HEIGHT, LESS_THAN
-#include "ftxui/dom/node.hpp"     // for Render
-#include "ftxui/screen/color.hpp" // for ftxui
+#include "ftxui/component/component.hpp"
+#include "ftxui/component/component_base.hpp"
+#include "ftxui/component/screen_interactive.hpp"
+#include "ftxui/dom/elements.hpp"
+#include "ftxui/dom/node.hpp"
+#include "ftxui/screen/color.hpp"
 #include <ftxui/component/component_options.hpp>
-#include <ftxui/dom/elements.hpp> // for operator|, size, Element, text, hcenter, Decorator, Fit, WIDTH, hflow, window, EQUAL, GREATER_THAN, HEIGHT, bold, border, dim, LESS_THAN
-#include <ftxui/screen/screen.hpp> // for Full, Screen
-#include <string> // for allocator, char_traits, operator+, to_string, string
+#include <ftxui/dom/elements.hpp>
+#include <ftxui/screen/screen.hpp>
+#include <string>
 
 int main() {
     using namespace ftxui;
@@ -27,30 +27,47 @@ int main() {
     // what length the password is
     int passLenChar = 16;
     Component passLen = Container::Vertical(
-        {Slider("Password Length:", &passLenChar, 1, 255, 1)});
+        /*{Slider("Password Length:", &passLenChar, 1, 255, 1)});*/
+        {Slider("", &passLenChar, 1, 255, 1)});
 
     // regenerate password button
-    std::string buttonLabel = "New Password!";
-    auto button = Button(&buttonLabel, screen.ExitLoopClosure());
+    std::string newPassLabel = "New Password!";
+    auto newPassButton = Button(&newPassLabel, screen.ExitLoopClosure());
+
+    // close tui button
+    std::string closeButLabel = "Exit";
+    Component exitButton = Button(&closeButLabel, screen.ExitLoopClosure());
 
     // finalized layout of the tui
     Component layout = Container::Vertical({
         validCharSelect,
         passLen,
-        button,
+        newPassButton,
+        exitButton,
     });
 
     // render the final layout
     auto component = Renderer(layout, [&] {
-        return vbox({
-                   text("Welcome to tui-password-gen!"),
+        return hbox({
+                   vbox({
+                       /*separatorCharacter("Valid Char Types:"),*/
+                       separator(),
+                       validCharSelect->Render(),
+                       separator(),
+                       passLen->Render(),
+                       separator(),
+                       hbox({
+                           newPassButton->Render(),
+                           exitButton->Render(),
+                       }) | center,
+                       separatorDouble(),
+                   }),
                    separator(),
-                   validCharSelect->Render(),
-                   separator(),
-                   passLen->Render(),
-                   button->Render(),
+                   vbox({
+                       text("Hello world!"),
+                   }),
                }) |
-               border;
+               border | flex;
     });
 
     screen.Loop(component);
