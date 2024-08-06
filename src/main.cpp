@@ -112,31 +112,107 @@ int main() {
         return password;
     };
 
+    auto security = [&] {
+        int charactersAvail = 0;
+        if (used[0]) {
+            charactersAvail += 26;
+        }
+        if (used[1]) {
+            charactersAvail += 26;
+        }
+        if (used[2]) {
+            charactersAvail += 10;
+        }
+        if (used[3]) {
+            charactersAvail += 5;
+        }
+        if (used[4]) {
+            charactersAvail += 10;
+        }
+
+        return charactersAvail * passLenChar / 19635;
+    };
+
+    auto introPara = Renderer([&] {
+        std::string msg = "Terminals are cool. Linux pass is cool. But have "
+                          "you ever needed a way to generate passwords in "
+                          "the terminal? Fear not, because tui-password-gen "
+                          "is here to help. With a range of configurable "
+                          "options and character sets that you may or may "
+                          "not use, it allows you to make your online "
+                          "prescene much more secure! Who am I kidding. "
+                          "You're probably better off using something like "
+                          "keepassxc instead of this.";
+        std::string bannerArt1 =
+            "  __        .__                                   "
+            "                           .___                   "
+            "           ";
+        std::string bannerArt2 =
+            "_/  |_ __ __|__|         ___________    ______ "
+            "________  _  _____________  __| _/          ____  "
+            " ____   ____  ";
+        std::string bannerArt3 =
+            "\\   __\\  |  \\  |  ______ \\____ \\__  \\  /  "
+            "___//  ___/\\ \\/ \\/ /  _ \\_  __ \\/ __ |  "
+            "______  / ___\\_/ __ \\ /    \\ ";
+        std::string bannerArt4 =
+            " |  | |  |  /  | /_____/ |  |_> > __ \\_\\___ \\ "
+            "\\___ \\  \\     (  <_> )  | \\/ /_/ | /_____/ / "
+            "/_/  >  ___/|   |  \\";
+        std::string bannerArt5 =
+            " |__| |____/|__|         |   __(____  /____  "
+            ">____  >  \\/\\_/ \\____/|__|  \\____ |         "
+            "\\___  / \\___  >___|  /";
+        std::string bannerArt6 =
+            "                         |__|       \\/     \\/   "
+            "  \\/                          \\/        /_____/ "
+            "     \\/     \\/ ";
+        return vbox({
+            paragraphAlignLeft(bannerArt1),
+            paragraphAlignLeft(bannerArt2),
+            paragraphAlignLeft(bannerArt3),
+            paragraphAlignLeft(bannerArt4),
+            paragraphAlignLeft(bannerArt5),
+            paragraphAlignLeft(bannerArt6),
+            text(""),
+            paragraphAlignLeft(msg),
+        });
+    });
+
     // render the final layout
     auto component = Renderer(layout, [&] {
-        return hbox({
-                   vbox({
-                       /*separatorCharacter("Valid Char Types:"),*/
-                       /*separator(),*/
-                       text("Valid Char Types:") | bold | bgcolor(Color::Blue),
-                       validCharSelect->Render(),
-                       separator(),
-                       text("Select Password Length:") | bold |
-                           bgcolor(Color::Blue),
-                       passLen->Render(),
-                       separator(),
-                       hbox({
-                           newPassButton->Render(),
-                           exitButton->Render(),
-                       }) | center,
+        return vbox({
+                   hbox({
+                       introPara->Render(),
                    }),
                    separator(),
-                   vbox({
-                       /*hflow("Your new randomly generated password is:"),*/
-                       hflow(genPassword()),
-                   }),
+                   hbox({
+                       vbox({
+                           /*separatorCharacter("Valid Char Types:"),*/
+                           /*separator(),*/
+                           text("Valid Char Types:") | bold |
+                               bgcolor(Color::Blue),
+                           validCharSelect->Render(),
+                           separator(),
+                           text("Select Password Length:") | bold |
+                               bgcolor(Color::Blue),
+                           passLen->Render(),
+                           separator(),
+                           hbox({
+                               newPassButton->Render(),
+                               exitButton->Render(),
+                           }) | center,
+                       }),
+                       separator(),
+                       vbox({
+                           hflow(genPassword()),
+                           /*separator(),*/
+                           /*gauge(security()),*/
+                           /*hflow(security()),*/
+                       }),
+                   }) | flex,
                }) |
-               border | flex;
+               border;
     });
 
     screen.Loop(component);
