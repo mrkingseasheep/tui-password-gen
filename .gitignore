@@ -1,3 +1,6 @@
 build/*
 .cache/*
+.cache/*/*
+.cache/*/*/*
 src/main.cpp.temp
+there/has/got/to/be/a/better/way
