@@ -12,8 +12,11 @@ I'd like to appologize for each commit being relatively small changes. I'm still
 ## How to build
 
 `git clone https://github.com/mrkingseasheep/tui-password-gen.git`
+
 `cd tui-password-gen/build`
+
 `cmake ..`
+
 `./tui-password-gen`
 
 Die from the uglyness.
