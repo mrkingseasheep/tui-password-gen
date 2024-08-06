@@ -14,14 +14,7 @@ int main() {
 
     auto screen = ScreenInteractive::Fullscreen();
 
-    // -------------------------------------------------------------------------------------
-    // Title panel
-    // -------------------------------------------------------------------------------------
-
-    // -------------------------------------------------------------------------------------
-    // Password choice left panel
-    // -------------------------------------------------------------------------------------
-
+    // what chars are allowed to be used
     Component validCharSelect = Container::Vertical({});
     std::string options[5] = {"Alphabit", "Capitals", "Numbers", "@-_",
                               "Other Symbols"};
@@ -31,54 +24,26 @@ int main() {
         validCharSelect->Add(Checkbox(&options[i], &used[i]));
     }
 
-    int passLength = 16;
+    // what length the password is
+    int passLenChar = 16;
+    Component passLen = Container::Vertical(
+        {Slider("Password Length:", &passLenChar, 1, 255, 1)});
 
-    // -------------------------------------------------------------------------------------
-    // Password display right panel
-    // -------------------------------------------------------------------------------------
-
-    Component generatedPasswordPanel = Container::Vertical({});
-
-    // -------------------------------------------------------------------------------------
-    // Render everything
-    // -------------------------------------------------------------------------------------
-
-    auto
-
-        auto left = Renderer([&] {
-            return vbox({
-                text("Options:") | bold,
-                choice->Render(),
-                separator(),
-                text("Password Length:") | bold,
-
-                separator(),
-                text("Password Strength:") | bold,
-                gauge(0.5),
-            });
-        });
-    int leftSize = 30;
-
-    auto right = Renderer([&] {
-        return vbox({
-            text("Password:") | bold,
-        });
+    // finalized layout of the tui
+    Component layout = Container::Vertical({
+        validCharSelect,
+        passLen,
     });
-    int rightSize = 50;
 
-    /*Component title = Container::({});*/
-
-    Component container = choice;
-    container = ResizableSplitRight(right, container, &rightSize);
-    container = ResizableSplitLeft(left, container, &leftSize);
-
-    auto renderer = Renderer(container, [&] {
+    // render the final layout
+    auto component = Renderer(layout, [&] {
         return vbox({
-                   text("Welcome to tui-password-gen V1"),
+                   validCharSelect->Render(),
                    separator(),
-                   left->Render(),
+                   passLen->Render(),
                }) |
                border;
     });
-    screen.Loop(renderer);
+
+    screen.Loop(component);
 }
