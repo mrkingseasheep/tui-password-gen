@@ -29,18 +29,26 @@ int main() {
     Component passLen = Container::Vertical(
         {Slider("Password Length:", &passLenChar, 1, 255, 1)});
 
+    // regenerate password button
+    std::string buttonLabel = "New Password!";
+    auto button = Button(&buttonLabel, screen.ExitLoopClosure());
+
     // finalized layout of the tui
     Component layout = Container::Vertical({
         validCharSelect,
         passLen,
+        button,
     });
 
     // render the final layout
     auto component = Renderer(layout, [&] {
         return vbox({
+                   text("Welcome to tui-password-gen!"),
+                   separator(),
                    validCharSelect->Render(),
                    separator(),
                    passLen->Render(),
+                   button->Render(),
                }) |
                border;
     });
