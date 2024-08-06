@@ -23,9 +23,12 @@ int main() {
     }
     auto renderer = Renderer(container, [&] {
         return vbox({
-            hbox(text("Options"), container->Render()),
-        });
+                   hbox(text("Options")) | bold,
+                   separator(),
+                   hbox(container->Render()),
+               }) |
+               border;
     });
 
-    screen.Loop(container);
+    screen.Loop(renderer);
 }
