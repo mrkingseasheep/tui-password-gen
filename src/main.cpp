@@ -15,20 +15,47 @@ int main() {
                               "Other Symbols"};
     bool used[5] = {0, 0, 0, 0, 0};
 
-    Component container = Container::Vertical({});
+    Component choice = Container::Vertical({});
 
-    auto screen = ScreenInteractive::FitComponent();
+    auto screen = ScreenInteractive::Fullscreen();
     for (int i = 0; i < 5; ++i) {
-        container->Add(Checkbox(&options[i], &used[i]));
+        choice->Add(Checkbox(&options[i], &used[i]));
     }
+
+    auto left = Renderer([&] {
+        return vbox({
+            text("Options:") | bold,
+            choice->Render(),
+            separator(),
+            text("Password Length:") | bold,
+
+            separator(),
+            text("Password Strength:") | bold,
+            gauge(0.5),
+        });
+    });
+    int leftSize = 30;
+
+    auto right = Renderer([&] {
+        return vbox({
+            text("Password:") | bold,
+        });
+    });
+    int rightSize = 50;
+
+    /*Component title = Container::({});*/
+
+    Component container = choice;
+    container = ResizableSplitRight(right, container, &rightSize);
+    container = ResizableSplitLeft(left, container, &leftSize);
+
     auto renderer = Renderer(container, [&] {
         return vbox({
-                   hbox(text("Options")) | bold,
+                   text("Welcome to tui-password-gen V1"),
                    separator(),
-                   hbox(container->Render()),
+                   left->Render(),
                }) |
                border;
     });
-
     screen.Loop(renderer);
 }
