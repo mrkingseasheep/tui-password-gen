@@ -6,8 +6,10 @@
 #include "ftxui/screen/color.hpp"
 #include <cstdlib>
 #include <ftxui/component/component_options.hpp>
+#include <ftxui/component/event.hpp>
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/screen/screen.hpp>
+#include <functional>
 #include <string>
 #include <vector>
 
@@ -34,7 +36,8 @@ int main() {
 
     // regenerate password button
     std::string newPassLabel = "New Password!";
-    auto newPassButton = Button(&newPassLabel, screen.ExitLoopClosure());
+    Event nullEvent;
+    auto newPassButton = Button(&newPassLabel, [&] { ; });
 
     // close tui button
     std::string closeButLabel = "Exit";
@@ -126,7 +129,6 @@ int main() {
                            newPassButton->Render(),
                            exitButton->Render(),
                        }) | center,
-                       separatorDouble(),
                    }),
                    separator(),
                    vbox({
