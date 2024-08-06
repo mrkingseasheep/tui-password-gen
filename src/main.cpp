@@ -11,29 +11,52 @@
 
 int main() {
     using namespace ftxui;
+
+    auto screen = ScreenInteractive::Fullscreen();
+
+    // -------------------------------------------------------------------------------------
+    // Title panel
+    // -------------------------------------------------------------------------------------
+
+    // -------------------------------------------------------------------------------------
+    // Password choice left panel
+    // -------------------------------------------------------------------------------------
+
+    Component validCharSelect = Container::Vertical({});
     std::string options[5] = {"Alphabit", "Capitals", "Numbers", "@-_",
                               "Other Symbols"};
     bool used[5] = {0, 0, 0, 0, 0};
 
-    Component choice = Container::Vertical({});
-
-    auto screen = ScreenInteractive::Fullscreen();
     for (int i = 0; i < 5; ++i) {
-        choice->Add(Checkbox(&options[i], &used[i]));
+        validCharSelect->Add(Checkbox(&options[i], &used[i]));
     }
 
-    auto left = Renderer([&] {
-        return vbox({
-            text("Options:") | bold,
-            choice->Render(),
-            separator(),
-            text("Password Length:") | bold,
+    int passLength = 16;
 
-            separator(),
-            text("Password Strength:") | bold,
-            gauge(0.5),
+    // -------------------------------------------------------------------------------------
+    // Password display right panel
+    // -------------------------------------------------------------------------------------
+
+    Component generatedPasswordPanel = Container::Vertical({});
+
+    // -------------------------------------------------------------------------------------
+    // Render everything
+    // -------------------------------------------------------------------------------------
+
+    auto
+
+        auto left = Renderer([&] {
+            return vbox({
+                text("Options:") | bold,
+                choice->Render(),
+                separator(),
+                text("Password Length:") | bold,
+
+                separator(),
+                text("Password Strength:") | bold,
+                gauge(0.5),
+            });
         });
-    });
     int leftSize = 30;
 
     auto right = Renderer([&] {
