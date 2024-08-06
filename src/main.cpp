@@ -179,6 +179,13 @@ int main() {
         });
     });
 
+    auto showStrength = [](double str) {
+        return hbox({
+            text(std::to_string((int)(str * 100)) + "%"),
+            gauge(str),
+        });
+    };
+
     // render the final layout
     auto component = Renderer(layout, [&] {
         return vbox({
@@ -205,11 +212,12 @@ int main() {
                        }),
                        separator(),
                        vbox({
-                           hflow(genPassword()),
-                           /*separator(),*/
-                           /*gauge(security()),*/
+                           text("Password:") | bold | bgcolor(Color::Blue) |
+                               center,
+                           hflow(genPassword()) | center, separator(),
+                           /*showStrength(security()),*/
                            /*hflow(security()),*/
-                       }),
+                       }) | flex,
                    }) | flex,
                }) |
                border;
